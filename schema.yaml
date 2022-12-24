@@ -1,0 +1,121 @@
+title: "OKE deployment using terraform"
+description: "We are using terraform for OKE cluster and node deployment"
+schemaVersion: 1.1.0
+version: "20221221"
+locale: "en"
+
+variableGroups:
+- title: Hidden
+  #visible: false
+  variables:
+  - compartment_ocid
+  - tenancy_ocid
+  - region
+  - image_source_id
+
+- title: "Select Compute Shape"
+  variables:
+  - instance_shape
+
+- title: "SSH Key Configuration"
+  variables:
+  - ssh_public_key
+
+- title: "Virtual Cloud Network Configuration"
+  variables:
+  - vcn_name
+  - vcn_dns_label
+  - vcn_cidr
+  - public_cidr
+  - public_lb_cidr
+  - private_cidr
+  - public_subnet_dns_label
+  - private_subnet_dns_label
+  - public_lb_subnet_dns_label
+
+- title: "OKE Cluster details"
+  variables:
+  - cluster_name
+  - cluster_ver
+
+- title: "OKE Node details"
+  variables:
+  - node_name
+  - node_ver
+  - node_count
+
+variables:  
+  vcn_name:
+    type: string
+    title: "Enter your VCN name"
+
+  vcn_dns_label:
+    type: string
+    title: "Enter your VCN Dns name"
+
+  vcn_cidr:
+    type: string
+    title: "Enter your VCN CIDR Block. Examle: 10.0.0/16"
+
+  public_cidr:
+    type: string
+    title: "Enter your public subnet CIDR Block. Examle: 10.0.0/16"
+
+  public_lb_cidr:
+    type: string
+    title: "Enter your public LB subnet CIDR Block. Examle: 10.0.0/16"
+
+  private_cidr:
+    type: string
+    title: "Enter your private subnet CIDR Block. Examle: 10.0.0/16"
+
+  instance_shape:
+    type: enum
+    enum:
+      - "VM.Standard1.2"
+      - "VM.Standard.E2.1.Micro"
+      - "VM.Standard2.1"
+      - "VM.Standard2.2"
+      - "VM.Standard.E2.1"
+    title: "Select a shape for the compute instances"
+    description: "A shape is a template that determines the number of CPUs, amount of memory, and other resources allocated to a newly created instance."
+
+  cluster_name:
+    type: string
+    title: "Enter your OKE Cluster name"
+
+  cluster_ver:
+    type: enum
+    enum:
+      - "v1.24.1"
+      - "v1.23.4"
+      - "v1.22.5"
+    title: "Select a version of OKE cluster"
+
+  node_name:
+    type: string
+    title: "Enter your OKE node name"
+
+  node_ver:
+    type: enum
+    enum:
+      - "v1.24.1"
+      - "v1.23.4"
+      - "v1.22.5"
+    title: "Select a version of OKE node"
+
+  node_count:
+    type: enum
+    enum:
+      - "1"
+      - "2"
+      - "3"
+    title: "Select a version of OKE node count"
+  
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    title: "SSH Public Key"
+    description: "The public SSH key for the key-pair that you want to use, if you wish to login to the instances over SSH."
+    additionalProps:
+      allowMultiple: true
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
